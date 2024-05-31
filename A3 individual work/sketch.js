@@ -103,6 +103,19 @@ let waveMaxHeight = 20;
 //Segment size for the pixelation effect
 let segmentSize = 20; 
 
+// Audio variables
+let song;
+let fft;
+let numBins = 128;
+let smoothing = 0.8;
+let button;
+
+//Load sound file
+function preload() {
+    //The audio file from freesound https://freesound.org/people/Steve64gs/sounds/737782/
+    song = loadSound("assets/737782__steve64gs__piano.wav");
+}
+
 function setup() {
     createCanvas(windowWidth, windowHeight);
     //Calculate the scale factor
@@ -111,6 +124,15 @@ function setup() {
     //Function to get the maximum y value from shapePoints
     calculateScaling();
     noLoop();
+
+    //Create a new instance of p5.FFT() object
+    fft = new p5.FFT(smoothing, numBins);
+    song.connect(fft);
+
+    //Add a "play/pause" button, and set its position and action
+    button = createButton("Play/Pause");
+    button.position((width - button.width) / 2, height - button.height - 10);
+    button.mousePressed(play_pause);
 }
 
 function windowResized() {
@@ -119,6 +141,8 @@ function windowResized() {
     scaleFactor = min(width / baseWidth, height / baseHeight);
     shape = new activeShape(shapePoints, scaleFactor);
     calculateScaling();
+    //Reset the position of the button
+    button.position((width - button.width) / 2, height - button.height - 10);
     redraw();
 }
 
@@ -137,6 +161,13 @@ function draw() {
     shape.drawReflection();
     drawTexture();
     applyPixelation();
+
+    //Get audio spectrum data and use it for animation
+    let spectrum = fft.analyze();
+    //Use the first bin for wave amplitude
+    let waveAmplitude = spectrum[0] / 255 * waveMaxHeight * 3;
+    //Adjust waterStart based on audio
+    waterStart = maxShapeY * 0.9 - waveAmplitude;
 }
 
 function drawBackground() {
@@ -246,3 +277,13 @@ function applyPixelation() {
     }
 }
 
+// Audio control function
+function play_pause() {
+    if (song.isPlaying()) {
+        song.stop();
+        noLoop();
+    } else {
+        song.loop();
+        loop();
+    }
+}
