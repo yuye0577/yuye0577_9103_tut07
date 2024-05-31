@@ -12,19 +12,19 @@ class activeShape {
         this.scaleFactor = scaleFactor;
         this.maxShapeY = this.calculateMaxY();
     }
-    calculateMaxY() {
+
+    calculateMaxY() {  
         //Function to get the maximum y value from shapePoints, 
         //use this technique from https://stackoverflow.com/questions/63236065/can-i-use-infinity-and-infinity-as-an-initial-value-for-max-and-min-variables
         let maxY = -Infinity;
-        for (let pt of shapePoints) {
+        for (let pt of this.points) {
             if (pt.y > maxY) {
                 maxY = pt.y;
             }
         }
         return maxY * this.scaleFactor;
     }
-    
-    
+
     //Draw the shape of landmark
     drawShape() {
         stroke(58, 37, 74, 150);
@@ -62,7 +62,7 @@ class activeShape {
         //use this technique from https://stackoverflow.com/questions/63236065/can-i-use-infinity-and-infinity-as-an-initial-value-for-max-and-min-variables
         let minY = Infinity;
         let highestX;
-        for (let pt of shapePoints) {
+        for (let pt of this.points) {
             if (pt.y < minY) {
                 minY = pt.y;
                 highestX = pt.x;
@@ -75,11 +75,12 @@ class activeShape {
         noStroke();
         let x = highestX * this.scaleFactor;
         for (let i = 0; i < 7; i++) {
-            let y = waterStart + i * spacing + diameter*2;
+            let y = waterStart + i * spacing + diameter * 2;
             ellipse(x, y, diameter * 1.5, diameter);
         }
     }
 }
+
 //Key points of the shape
 let shapePoints = [
     {x: 31, y: 524}, {x: 87, y: 452}, {x: 135, y: 450}, {x: 146, y: 399},
@@ -109,10 +110,9 @@ let fft;
 let numBins = 128;
 let smoothing = 0.8;
 let button;
-
 //Load sound file
 function preload() {
-    //The audio file from freesound https://freesound.org/people/Steve64gs/sounds/737782/
+    //audio file from freesound https://freesound.org/people/Steve64gs/sounds/737782/
     song = loadSound("assets/737782__steve64gs__piano.wav");
 }
 
@@ -133,6 +133,7 @@ function setup() {
     button = createButton("Play/Pause");
     button.position((width - button.width) / 2, height - button.height - 10);
     button.mousePressed(play_pause);
+    amplitude = new p5.Amplitude();
 }
 
 function windowResized() {
@@ -143,10 +144,12 @@ function windowResized() {
     calculateScaling();
     //Reset the position of the button
     button.position((width - button.width) / 2, height - button.height - 10);
+    amplitude = new p5.Amplitude();
     redraw();
 }
 
 function calculateScaling() {
+    //Get maxShapeY
     maxShapeY = shape.calculateMaxY();
     //Get the waterStart value from 90% of the height of the entire shape
     waterStart = maxShapeY * 0.9;
@@ -159,6 +162,7 @@ function draw() {
     shape.drawShape();
     drawWaves(rows);
     shape.drawReflection();
+    drawTexture();
     drawTexture();
     applyPixelation();
 
@@ -216,7 +220,7 @@ function drawWave(n, rows) {
     colorMode(HSB);
     //Calculate the hue (0 - 360) based on the wave number, mapping it to an HSB hue value
     let hue = map(n, 0, rows, 200, 250);
-    fill(hue, 60, 50, 0.5); // Set some transparency
+    fill(hue, 60, 50, 0.5);
     noStroke();
     //We're using vertex-based drawing
     beginShape();
@@ -240,20 +244,34 @@ function drawWave(n, rows) {
 
 //Draw the texture inside the landmark
 function drawTexture() {
-    const numLines = 2000; 
-    const maxLength = 45; 
+    const numLines = 2000;
+    const maxLength = 45;
+    let startColor = color(141, 131, 153);
+    let endColor = color(225, 131, 153);
     strokeWeight(1.5);
     for (let i = 0; i < numLines; i++) {
         let x1 = random(0, baseWidth) * scaleFactor;
         let y1 = random(0, maxShapeY);
         //Make the random angle
-        let angle = random(TWO_PI); 
+        let angle = random(TWO_PI);
         //Make the random length
-        let length = random(10, maxLength); 
+        let length = random(10, maxLength);
         let x2 = x1 + cos(angle) * length;
         let y2 = y1 + sin(angle) * length;
         if (shape.isInsideShape(x1, y1) && shape.isInsideShape(x2, y2)) {
-            let c = lerpColor(color(59, 64, 63), color(56, 21, 22), random(1));
+            //Use getLevel() to get the wavelength of audio, use the reference from https://p5js.org/zh-Hans/reference/#/p5.Amplitude
+            let level = amplitude.getLevel();
+            let l = map(level, 0, 1, 0, 200);
+            //Set different gradient colors for different wavelengths of audio
+            let c;
+            if (l > 160) {
+                c = lerpColor(startColor, endColor, 1); 
+            } else if (l > 80) {
+                c = lerpColor(startColor, endColor, 0.5);
+            } else {
+                c = lerpColor(startColor, endColor, 0);
+            }
+            //Draw line
             stroke(c);
             line(x1, y1, x2, y2);
         }
@@ -262,11 +280,12 @@ function drawTexture() {
 
 //Create a pixel style
 function applyPixelation() {
+    loadPixels();
     //Loop through the canvas in steps of segmentSize, both horizontally and vertically
     for (let y = 0; y < height; y += segmentSize) {
         for (let x = 0; x < width; x += segmentSize) {
             //Get the color of the pixel at the center of the current segment
-            let c = get(x + segmentSize / 2, y + segmentSize / 2);
+            let c = get(x, y);
             //Set the fill color to the color of the central pixel
             fill(c);
             //Disable the stroke for the rectangle to ensure a solid color fill
@@ -287,3 +306,4 @@ function play_pause() {
         loop();
     }
 }
+
