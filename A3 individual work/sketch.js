@@ -133,17 +133,19 @@ function setup() {
     button = createButton("Play/Pause");
     button.position((width - button.width) / 2, height - button.height - 10);
     button.mousePressed(play_pause);
+    //Create a new instance of p5.Amplitude() object
     amplitude = new p5.Amplitude();
 }
 
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
-    //Calculate the scale factor
+    //Reset the scale factor
     scaleFactor = min(width / baseWidth, height / baseHeight);
     shape = new activeShape(shapePoints, scaleFactor);
     calculateScaling();
     //Reset the position of the button
     button.position((width - button.width) / 2, height - button.height - 10);
+    //Reset amplitude
     amplitude = new p5.Amplitude();
     redraw();
 }
