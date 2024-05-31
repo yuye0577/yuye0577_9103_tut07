@@ -13,13 +13,15 @@ Audio
 - Textures in landmarks: changed colours
 
 ### Inspiration: 
-Waves: 
+#### Waves:
 ![First image of waves inspiration](<assets/Wave animative inspiration.gif>)
-![Reference of wave inspiration](https://blog.ninapaley.com/wp-content/uploads/2015/04/wave2_10.gif)
+#### ![Reference of wave inspiration](https://blog.ninapaley.com/2015/04/15/strange-waves/)
+I carefully observed this GIF. It uses the way the wave moves upward, which gives me a visual feeling of the water surface flowing. This is similar to the waves on the water drawn in our basic code, and this effect allows me to use it in the code to animate. Observing the changes in color gave me new inspiration, and I thought that I could make the water look flowing by changing the transparency.
 
-Textures in landmarks: 
+#### Textures in landmarks: 
 ![Second image of textual inspiration](<assets/Textual of landmark animative inspiration.gif>)
-![Reference of textual inspiration](https://www.google.com/url?sa=i&url=https%3A%2F%2Fwifflegif.com%2Fgifs%2F13766-buildings-lights-gif&psig=AOvVaw3FKYb4ZjptmO-iIBk9OBtO&ust=1717233455353000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCOCroPbHt4YDFQAAAAAdAAAAABAn)
+#### ![Reference of textual inspiration](https://www.google.com/url?sa=i&url=https%3A%2F%2Fwifflegif.com%2Fgifs%2F13766-buildings-lights-gif&psig=AOvVaw3FKYb4ZjptmO-iIBk9OBtO&ust=1717233455353000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCOCroPbHt4YDFQAAAAAdAAAAABAn)
+This animated image interprets the feeling of the city's staggered lights through the successive opening and closing of the room lights in each window of the building. It enriches my vision in the picture, although this is not a regular change. I thought that I could use the lines on the landmark buildings and the pixel effect we used to overlay in the code to achieve a shadowy lighting effect. By changing the "lights" (that is, the lines in the `texture`) in sync with the audio frequency, we can create a visual and auditory unity and make the picture more dynamic.
 
 ### A short technical explanation: 
 - Group code:
