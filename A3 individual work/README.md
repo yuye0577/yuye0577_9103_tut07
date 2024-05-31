@@ -14,24 +14,33 @@ Audio
 
 ### Inspiration: 
 Waves: 
-![First image of waves inspiration](A3 individual work/assets/Wave animative inspiration.gif)
-reference from: https://blog.ninapaley.com/wp-content/uploads/2015/04/wave2_10.gif
-![Second image of textual inspiration](assets/Textual of landmark animative inspiration.gif)
-reference from: https://www.google.com/url?sa=i&url=https%3A%2F%2Fwifflegif.com%2Fgifs%2F13766-buildings-lights-gif&psig=AOvVaw3FKYb4ZjptmO-iIBk9OBtO&ust=1717233455353000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCOCroPbHt4YDFQAAAAAdAAAAABAn
+![First image of waves inspiration](<assets/Wave animative inspiration.gif>)
+![Reference of wave inspiration](https://blog.ninapaley.com/wp-content/uploads/2015/04/wave2_10.gif)
+
+Textures in landmarks: 
+![Second image of textual inspiration](<assets/Textual of landmark animative inspiration.gif>)
+![Reference of textual inspiration](https://www.google.com/url?sa=i&url=https%3A%2F%2Fwifflegif.com%2Fgifs%2F13766-buildings-lights-gif&psig=AOvVaw3FKYb4ZjptmO-iIBk9OBtO&ust=1717233455353000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCOCroPbHt4YDFQAAAAAdAAAAABAn)
 
 ### A short technical explanation: 
-- Group code: 
-- Waves:  
-- Textures in landmarks: 
+- Group code:
+By using `calculateMaxY()`, the shape is related to the location of the water's surface.
+`drawShape()` is a method for drawing shapes includes particular drawing logic.  This technique is reliant on the scaling factor and point data of the instance. 
+The function `isInsideShape(x, y)` can be used to determine if a point is inside a shape or not. The particular shape is connected to its detecting logic. 
+The `drawReflection()` function can be used to draw the reflection of the shape. This technique is based on identifying the highest point of the shape. 
+By grouping all form-related actions together and modularizing the code in this fashion, many global variables may be avoided and each shape object is given the freedom to independently control its own state and behavior.
+The use of `this.` ensures that each instance in the class does not interfere with each other and can have its own properties and behaviors.
 
-### Part 1: Imaging Technique Inspiration
-![First image of Imaging Technique Inspiration](assets/Inspiration1.jpg)
-![Second image of Imaging Technique Inspiration](assets/Inspiration2.jpg)
-#### 100 words discussion
-This work is generally composed of many circles, and also uses the splicing and nesting techniques of rings, semicircles and arcs. These graphics create a visual staggered effect through the use of different colors. Some strong contrasting colors can make the splicing effect more significant. I can apply this graphic interlacing and splicing combination technique to my own projects, and let the graphics express a richer and more unique picture through different color combinations.
+- Waves:
+`waterStart` is used as a global variable in the waves function, which determines the height of the wave in the picture. I use `fft.analyze()` to get the spectrum data of the current audio, use `waveAmplitude` to calculate the amplitude of the wave, and finally adjust the value of waterStart according to the wave amplitude so that the overall height of the wave moves up and down with the rhythm of the music, making the wave look animated.
 
-### Part 2: Coding Technique Exploration
-![The image of Coding Technique Exploration](assets/Code_Inspiration.png)
-[A link to some example code](https://p5js.org/examples/structure-functions.html)
-#### 100 words discussion
-This code uses drawTarget in function draw() to draw three circles, in which the x and y coordinates of the center of the circle, the size of the circle and the number of bisected rings is respectively specified. In the function drawTarget(), it calculates the gray value corresponding to the fill color of each circle based on the number of num parameters and uses a for loop to determine the fill color through i*grayvalues, so that the concentric circles present a gray gradient effect, increasing visual richness. This helped me create the concentric circles and color variations above.
+- Textures in landmarks:
+In the `drawTexture()` function, let is used to define the two key colors of the start and end. Using the method in ![Reference of get level](https://p5js.org/zh-Hans/reference/#/p5.Amplitude), first use `level = amplitude.getLevel()` to get the amplitude (volume) value of the current audio, ranging from 0 to 1. Then use `l = map(level, 0, 1, 0, 300)` to map the volume value to a value between 0 and 300. Here I use `console.log(`Level: ${level}, Mapped Level: ${l}`);` to view the approximate range of the values ​​of `level` and `l`. Use let to define c, and then adjust the threshold of the color interval according to the printed result, and use the if else statement to represent each segment.
+```
+if (l > 60) {
+c = lerpColor(startColor, endColor, 1);
+} else if (l > 30) {
+c = lerpColor(startColor, endColor, 0.5);
+} else {
+c = lerpColor(startColor, endColor, 0);
+}
+```
