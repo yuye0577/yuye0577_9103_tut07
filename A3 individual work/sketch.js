@@ -162,10 +162,10 @@ function calculateScaling() {
 function draw() {
     drawBackground();
     shape.drawShape();
+    drawTexture();
+    drawTexture();
     drawWaves(rows);
     shape.drawReflection();
-    drawTexture();
-    drawTexture();
     applyPixelation();
 
     //Get audio spectrum data and use it for animation
