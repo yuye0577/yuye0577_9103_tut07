@@ -248,8 +248,8 @@ function drawWave(n, rows) {
 function drawTexture() {
     const numLines = 2000;
     const maxLength = 45;
-    let startColor = color(141, 131, 153);
-    let endColor = color(225, 131, 153);
+    let startColor = color(255, 212, 148);
+    let endColor = color(255, 90, 111);
     strokeWeight(1.5);
     for (let i = 0; i < numLines; i++) {
         let x1 = random(0, baseWidth) * scaleFactor;
@@ -263,12 +263,13 @@ function drawTexture() {
         if (shape.isInsideShape(x1, y1) && shape.isInsideShape(x2, y2)) {
             //Use getLevel() to get the wavelength of audio, use the reference from https://p5js.org/zh-Hans/reference/#/p5.Amplitude
             let level = amplitude.getLevel();
-            let l = map(level, 0, 1, 0, 200);
+            let l = map(level, 0, 1, 0, 300);
+            console.log(`Level: ${level}, Mapped Level: ${l}`);
             //Set different gradient colors for different wavelengths of audio
             let c;
-            if (l > 160) {
+            if (l > 60) {
                 c = lerpColor(startColor, endColor, 1); 
-            } else if (l > 80) {
+            } else if (l > 30) {
                 c = lerpColor(startColor, endColor, 0.5);
             } else {
                 c = lerpColor(startColor, endColor, 0);
